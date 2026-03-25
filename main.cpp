@@ -26,6 +26,7 @@ bool testSizeOfEmptyVector(const char ** pname)
 
 bool testSizeOfNonEmptyVector(const char ** pname)
 {
+  *pname = __func__;
   return false;
 }
 

@@ -39,5 +39,10 @@ bool knk::Vector< T >::isEmpty() const noexcept
   return !size_;
 }
 
+template< class T >
+size_t knk::Vector< T >::getSize() const noexcept
+{
+  return size_;
+}
 
 #endif
