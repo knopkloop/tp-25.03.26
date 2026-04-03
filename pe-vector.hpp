@@ -74,7 +74,7 @@ size_t knk::Vector< T >::getSize() const noexcept
 template< class T >
 size_t knk::Vector< T >::getCapacity() const noexcept
 {
-  return 0;
+  return capacity_;
 }
 
 #endif
