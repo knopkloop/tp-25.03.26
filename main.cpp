@@ -27,8 +27,8 @@ bool testSizeOfEmptyVector(const char ** pname)
 bool testSizeOfNonEmptyVector(const char ** pname)
 {
   *pname = __func__;
-  constexpr size_t size = 2;
-  Vector< int > v(size, 10);
+  constexpr size_t size = 2ull;
+  Vector< int > v(2ull, 10);
   return v.getSize() == size;
 }
 
@@ -36,14 +36,14 @@ bool testCapacityOfEmptyVector(const char ** pname)
 {
   *pname = __func__;
   Vector< int > v;
-  return v.getCapacity() == 0;
+  return v.getCapacity() == 0ull;
 }
 
 bool testCapacityOfVectorAfterConstruct(const char ** pname)
 {
   *pname = __func__;
-  constexpr size_t size = 5;
-  Vector< int > v(size, 10);
+  constexpr size_t size = 5ull;
+  Vector< int > v(5ull, 10);
   return v.getCapacity() == size;
 }
 
@@ -52,14 +52,14 @@ bool testPushBackOnEmptyVector(const char ** pname)
   *pname = __func__;
   Vector< int > v;
   v.pushBack(2);
-  return v.getSize() == 1 && !v.isEmpty();
+  return v.getSize() == 1ull && !v.isEmpty();
 }
 
 bool testPushBackOnNonEmptyVector(const char ** pname)
 {
   *pname = __func__;
-  constexpr size_t size = 5;
-  Vector< int > v(size, 2);
+  constexpr size_t size = 5ull;
+  Vector< int > v(5ull, 2);
   v.pushBack(12);
   return v.getSize() == size + 1;
 }
@@ -82,8 +82,8 @@ bool testPopBackOnEmptyVector(const char ** pname)
 bool testPopBackOnNonEmptyVector(const char ** pname)
 {
   *pname = __func__;
-  constexpr size_t size = 5;
-  Vector< int > v(size, 10);
+  constexpr size_t size = 5ull;
+  Vector< int > v(5ull, 10);
   v.popBack();
   return v.getSize() == size - 1;
 }
