@@ -11,13 +11,12 @@ namespace knk
   public:
     ~Vector();
     Vector();
-    explicit Vector(size_t size);
     Vector(size_t size, const T& value);
 
     Vector(const Vector< T >& rhs);
-    Vector(Vector< T >&& rhs);
+    Vector(Vector< T >&& rhs) noexcept;
 
-    Vector< T >& operator=(const Vector< T >& rhs) noexcept;
+    Vector< T >& operator=(const Vector< T >& rhs);
     Vector< T >& operator=(Vector< T >&& rhs) noexcept;
 
     void swap(Vector< T >& rhs) noexcept;
@@ -32,6 +31,7 @@ namespace knk
     size_t getCapacity() const noexcept;
 
     void pushBack(const T& val);
+    void pushBackRepeat(const T& val, size_t k);
     void pushFront(const T& val);
     void popBack();
 
@@ -46,6 +46,7 @@ namespace knk
   private:
     T* data_;
     size_t size_, capacity_;
+    explicit Vector(size_t size);
   };
 }
 
@@ -90,16 +91,14 @@ knk::Vector< T >::Vector(const Vector< T >& rhs):
 }
 
 template< class T >
-knk::Vector< T >::Vector(Vector< T >&& rhs):
-  data_(rhs.data_),
-  size_(rhs.size_),
-  capacity_(rhs.capacity_)
+knk::Vector< T >::Vector(Vector< T >&& rhs) noexcept:
+  Vector()
 {
-  rhs.data_ = nullptr;
+  swap(rhs);
 }
 
 template< class T >
-knk::Vector< T >& knk::Vector<T>::operator=(const Vector< T >& rhs) noexcept
+knk::Vector< T >& knk::Vector<T>::operator=(const Vector< T >& rhs)
 {
   if (this == std::addressof(rhs))
   {
@@ -152,10 +151,7 @@ const T& knk::Vector< T >::at(size_t id) const
 template< class T >
 T& knk::Vector< T >::operator[](size_t id) noexcept
 {
-  const Vector< T >* cthis = this;
-  const T& cr = (*cthis)[id];
-  T& r = const_cast< T& >(cr);
-  return r;
+  return const_cast< T& >((*static_cast< const Vector< T >* >(this))[id]);
 }
 
 template< class T >
@@ -214,6 +210,17 @@ void knk::Vector< T >::pushBack(const T& val)
   {
     data_[size_++] = val;
   }
+}
+
+template< class T >
+void knk::Vector< T >::pushBackRepeat(const T& val, size_t k)
+{
+  Vector< T > cpy(*this);
+  for (size_t i = 0; i < k; ++i)
+  {
+    cpy.pushBack(val);
+  }
+  swap(cpy);
 }
 
 template< class T >
