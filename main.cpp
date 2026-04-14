@@ -104,7 +104,7 @@ bool testPopBackOnEmptyVector(const char** pname)
     v.popBack();
     return false;
   }
-  catch(const std::out_of_range &e)
+  catch(const std::out_of_range& e)
   {
     const char* text = e.what();
     return !std::strcmp(text, "Vector is empty");
@@ -149,7 +149,7 @@ bool testElementCheckedOutOfBoundAccess(const char** pname)
     v.at(0);
     return false;
   }
-  catch(const std::out_of_range &e)
+  catch(const std::out_of_range& e)
   {
     const char* text = e.what();
     return !std::strcmp(text, "id out of bound");
@@ -186,7 +186,7 @@ bool testElementCheckedOutOfBoundConstAccess(const char** pname)
     v.at(0);
     return false;
   }
-  catch(const std::out_of_range &e)
+  catch(const std::out_of_range& e)
   {
     const char* text = e.what();
     return !std::strcmp(text, "id out of bound");
@@ -251,7 +251,7 @@ bool testCopyConstructor(const char** pname)
   {
     try
     {
-      isEqual = v.at(i) == yav.at(i);
+      isEqual = (v.at(i) == yav.at(i));
     }
     catch(...)
     {
@@ -269,19 +269,19 @@ bool testMoveConstructor(const char** pname)
   v.pushBack(2);
   v.pushBack(3);
 
-  const size_t originalSize = v.getSize();
+  const size_t origSize = v.getSize();
 
-  Vector< int > moved(std::move(v));
+  Vector< int > yav(std::move(v));
 
-  if (moved.getSize() != originalSize)
+  if (!(yav.getSize() == origSize && v.getSize() == 0))
   {
     return false;
   }
-  for (size_t i = 0; i < originalSize; ++i)
+  for (size_t i = 0; i < origSize; ++i)
   {
     try
     {
-      if (moved.at(i) != static_cast< int >(i) + 1)
+      if (yav.at(i) != static_cast< int >(i) + 1)
       {
         return false;
       }
@@ -405,7 +405,7 @@ bool testInsertSingleOutOfBound(const char** pname)
     v.insert(2, 99);
     return false;
   }
-  catch(const std::out_of_range &e)
+  catch(const std::out_of_range& e)
   {
     const char* text = e.what();
     return !std::strcmp(text, "id out of bound");
@@ -449,7 +449,7 @@ bool testInsertRangeIdOutOfBound(const char** pname)
     v1.insert(2, v2, 0, 1);
     return false;
   }
-  catch(const std::out_of_range &e)
+  catch(const std::out_of_range& e)
   {
     const char* text = e.what();
     return !std::strcmp(text, "id out of bound");
@@ -475,7 +475,7 @@ bool testInsertRangeOutOfBound(const char** pname)
     v1.insert(2, v2, 1, v2.getSize() + 1);
     return false;
   }
-  catch(const std::out_of_range &e)
+  catch(const std::out_of_range& e)
   {
     const char* text = e.what();
     return !std::strcmp(text, "range out of bound");
@@ -515,10 +515,52 @@ bool testEraseSingleOutOfBound(const char** pname)
     v.erase(2);
     return false;
   }
-  catch(const std::out_of_range &e)
+  catch(const std::out_of_range& e)
   {
     const char* text = e.what();
     return !std::strcmp(text, "id out of bound");
+  }
+  catch(...)
+  {
+    return false;
+  }
+}
+
+bool testEraseRange(const char** pname)
+{
+  *pname = __func__;
+  Vector< int > v;
+  v.pushBack(1);
+  v.pushBack(2);
+  v.pushBack(3);
+  v.pushBack(4);
+  try
+  {
+    v.erase(1, 3);
+    return v.getSize() == 2 && v[0] == 1 && v[1] == 4;
+  }
+  catch(...)
+  {
+    return false;
+  }
+}
+
+bool testEraseRangeOutOfBound(const char** pname)
+{
+  *pname = __func__;
+  Vector< int > v;
+  v.pushBack(1);
+  v.pushBack(2);
+  v.pushBack(3);
+  try
+  {
+    v.erase(1, 5);
+    return false;
+  }
+  catch(const std::out_of_range& e)
+  {
+    const char* text = e.what();
+    return !std::strcmp(text, "range out of bound");
   }
   catch(...)
   {
@@ -551,6 +593,8 @@ int main()
     { testInsertRangeOutOfBound, "Insert of range must generate exception with specific text, if range out of bound" },
     { testEraseSingle, "Erase of single element must remove element at index and shift others" },
     { testEraseSingleOutOfBound, "Erase of single element must generate exception with specific text, if index >= size" },
+    { testEraseRange, "Erase of range must remove elements on [beg; end)" },
+    { testEraseRangeOutOfBound, "Erase of range must generate exception with specific text for invalid bounds" },
     { testElementCheckedAccess, "Inbound access must return lvalue reference to indexed value" },
     { testElementCheckedOutOfBoundAccess, "Out of bound access must generate exception with specific text" },
     { testElementCheckedConstAccess, "Same as inbound access, but const" },
