@@ -147,7 +147,7 @@ bool testElementCheckedOutOfBoundAccess(const char** pname)
   catch(const std::out_of_range &e)
   {
     const char* text = e.what();
-    return !std::strcmp("id is out of bound", text);
+    return !std::strcmp("id out of bound", text);
   }
   catch(...)
   {
@@ -184,7 +184,7 @@ bool testElementCheckedOutOfBoundConstAccess(const char** pname)
   catch(const std::out_of_range &e)
   {
     const char* text = e.what();
-    return !std::strcmp("id is out of bound", text);
+    return !std::strcmp("id out of bound", text);
   }
   catch(...)
   {
@@ -403,7 +403,7 @@ bool testInsertSingleOutOfBound(const char** pname)
   catch(const std::out_of_range &e)
   {
     const char* text = e.what();
-    return !std::strcmp("id is out of bound", text);
+    return !std::strcmp("id out of bound", text);
   }
   catch(...)
   {
@@ -411,6 +411,75 @@ bool testInsertSingleOutOfBound(const char** pname)
   }
 }
 
+bool testInsertRange(const char** pname)
+{
+  *pname = __func__;
+  Vector< int > v1;
+  v1.pushBack(1);
+  v1.pushBack(4);
+  Vector< int > v2;
+  v2.pushBack(2);
+  v2.pushBack(3);
+  v2.pushBack(4);
+  try
+  {
+    v1.insert(1, v2, 0, 2);
+    return v1.getSize() == 4 && v1[0] == 1 && v1[1] == 2 && v1[2] == 3 && v1[3] == 4;
+  }
+  catch(...)
+  {
+    return false;
+  }
+}
+
+bool testInsertRangeIdOutOfBound(const char** pname)
+{
+  *pname = __func__;
+  Vector< int > v1;
+  v1.pushBack(1);
+  Vector< int > v2;
+  v2.pushBack(2);
+  try
+  {
+    v1.insert(2, v2, 0, 1);
+    return false;
+  }
+  catch(const std::out_of_range &e)
+  {
+    const char* text = e.what();
+    return !std::strcmp("id out of bound", text);
+  }
+  catch(...)
+  {
+    return false;
+  }
+}
+
+bool testInsertRangeOutOfBound(const char** pname)
+{
+  *pname = __func__;
+  Vector< int > v1;
+  v1.pushBack(1);
+  v1.pushBack(5);
+  Vector< int > v2;
+  v2.pushBack(2);
+  v2.pushBack(3);
+  v2.pushBack(4);
+  try
+  {
+    v1.insert(2, v2, 1, v2.getSize() + 1);
+    return false;
+  }
+  catch(const std::out_of_range &e)
+  {
+    const char* text = e.what();
+    return !std::strcmp("range out of bound", text);
+  }
+  catch(...)
+  {
+    return false;
+  }
+}
 
 int main()
 {
@@ -430,8 +499,11 @@ int main()
     { testPushFrontOnNonEmptyVector, "First element of non-empty vector after pushFront must be equal value and size must increase"},
     { testPopBackOnEmptyVector, "PopBack on empty vector must throw exception" },
     { testPopBackOnNonEmptyVector, "Size of non-empty vector after popBack must decrease" },
-    { testInsertSingle, "Insert of single element in vector must place element at id"},
-    { testInsertSingleOutOfBound, "Insert of single element must generate exception with specific text, if id is out of bound"},
+    { testInsertSingle, "Insert of single element must place element at id" },
+    { testInsertSingleOutOfBound, "Insert of single element must generate exception with specific text, if id out of bound" },
+    { testInsertRange, "Insert of range must copy elements from source range" },
+    { testInsertRangeIdOutOfBound, "Insert of range must generate exception with specific text, if id out of bound" },
+    { testInsertRangeOutOfBound, "Insert of range must generate exception with specific text, if range out of bound" },
     { testElementCheckedAccess, "Inbound access must return lvalue reference or generate exception with specific text" },
     { testElementCheckedOutOfBoundAccess, "Out of bound access must generate exception with specific text" },
     { testElementCheckedConstAccess, "Same as inbound access, but const" },
