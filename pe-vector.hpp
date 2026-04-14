@@ -143,7 +143,7 @@ const T& knk::Vector< T >::at(size_t id) const
   {
     return (*this)[id];
   }
-  throw std::out_of_range("id is out of bound");
+  throw std::out_of_range("id out of bound");
 }
 
 template< class T >
@@ -248,7 +248,7 @@ void knk::Vector< T >::insert(size_t id, const T& val)
 {
   if (id > getSize())
   {
-    throw std::out_of_range("id is out of bound");
+    throw std::out_of_range("id out of bound");
   }
   Vector< T > v;
   for(size_t i = 0; i < id; ++i)
@@ -256,6 +256,33 @@ void knk::Vector< T >::insert(size_t id, const T& val)
     v.pushBack((*this)[i]);
   }
   v.pushBack(val);
+  for(size_t i = id; i < getSize(); ++i)
+  {
+    v.pushBack((*this)[i]);
+  }
+  swap(v);
+}
+
+template< class T >
+void knk::Vector< T >::insert(size_t id, const Vector< T >& rhs, size_t beg, size_t end)
+{
+  if (id > getSize())
+  {
+    throw std::out_of_range("id out of bound");
+  }
+  if (beg > rhs.getSize() || end > rhs.getSize() || beg > end)
+  {
+    throw std::out_of_range("range out of bound");
+  }
+  Vector< T > v;
+  for (size_t i = 0; i < id; ++i)
+  {
+    v.pushBack((*this)[i]);
+  }
+  for (size_t i = beg; i < end; ++i)
+  {
+    v.pushBack(rhs[i]);
+  }
   for(size_t i = id; i < getSize(); ++i)
   {
     v.pushBack((*this)[i]);
