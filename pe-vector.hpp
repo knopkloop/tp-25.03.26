@@ -289,4 +289,23 @@ void knk::Vector< T >::insert(size_t id, const Vector< T >& rhs, size_t beg, siz
   }
   swap(v);
 }
+
+template< class T >
+void knk::Vector< T >::erase(size_t id)
+{
+  if (id >= getSize())
+  {
+    throw std::out_of_range("id out of bound");
+  }
+  Vector< T > v(getSize() - 1);
+  for (size_t i = 0; i < id; ++i)
+  {
+    v[i] = (*this)[i];
+  }
+  for (size_t i = id; i < v.getSize(); ++i)
+  {
+    v[i] = (*this)[i + 1];
+  }
+  swap(v);
+}
 #endif
