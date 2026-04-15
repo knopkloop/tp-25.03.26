@@ -31,6 +31,7 @@ namespace knk
     VIter& operator-=(int n) noexcept;
     VIter operator+(int n) const noexcept;
     VIter operator-(int n) const noexcept;
+    int operator-(const VIter& other) const noexcept;
 
     bool operator==(const VIter& other) const noexcept;
     bool operator!=(const VIter& other) const noexcept;
@@ -65,6 +66,7 @@ namespace knk
     VCIter& operator-=(int n) noexcept;
     VCIter operator+(int n) const noexcept;
     VCIter operator-(int n) const noexcept;
+    int operator-(const VCIter& other) const noexcept;
 
     bool operator==(const VCIter& other) const noexcept;
     bool operator!=(const VCIter& other) const noexcept;
@@ -160,6 +162,12 @@ knk::VIter< T > knk::VIter< T >::operator-(int n) const noexcept
   VIter< T > tmp = *this;
   tmp -= n;
   return tmp;
+}
+
+template< class T >
+int knk::VIter< T >::operator-(const VIter< T >& other) const noexcept
+{
+  return static_cast< int >(ptr_ - other.ptr_);
 }
 
 template< class T >
@@ -286,6 +294,12 @@ knk::VCIter< T > knk::VCIter< T >::operator-(int n) const noexcept
   VCIter< T > tmp = *this;
   tmp -= n;
   return tmp;
+}
+
+template< class T >
+int knk::VCIter< T >::operator-(const VCIter< T >& other) const noexcept
+{
+  return static_cast< int >(ptr_ - other.ptr_);
 }
 
 template< class T >
