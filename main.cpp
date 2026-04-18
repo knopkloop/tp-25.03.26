@@ -306,25 +306,7 @@ bool testCopyAssignment(const char** pname)
 
   v2 = v1;
 
-  if (v2.getSize() != v1.getSize())
-  {
-    return false;
-  }
-  for (size_t i = 0; i < v1.getSize(); ++i)
-  {
-    try
-    {
-      if (v1.at(i) != v2.at(i))
-      {
-        return false;
-      }
-    }
-    catch(...)
-    {
-      return false;
-    }
-  }
-  return true;
+  return v1 == v2;
 }
 
 bool testMoveAssignment(const char** pname)
@@ -486,44 +468,6 @@ bool testInsertRangeOutOfBound(const char** pname)
   }
 }
 
-bool testInsertIterRange(const char** pname)
-{
-  *pname = __func__;
-  Vector< int > v1;
-  v1.pushBack(1);
-  v1.pushBack(4);
-  v1.pushBack(5);
-  Vector< int > v2;
-  v2.pushBack(2);
-  v2.pushBack(3);
-  try
-  {
-    v1.insert(v1.begin() + 1, v2.cbegin(), v2.cend());
-    return v1.getSize() == 5 && v1[0] == 1 && v1[1] == 2 && v1[2] == 3 && v1[3] == 4 && v1[4] == 5;
-  }
-  catch(...)
-  {
-    return false;
-  }
-}
-
-bool testInsertIterValueRepeat(const char** pname)
-{
-  *pname = __func__;
-  Vector< int > v1;
-  v1.pushBack(1);
-  v1.pushBack(5);
-  try
-  {
-    v1.insert(v1.begin() + 1, 0, 3);
-    return v1.getSize() == 5 && v1[0] == 1 && v1[1] == 0 && v1[2] == 0 && v1[3] == 0 && v1[4] == 5;
-  }
-  catch(...)
-  {
-    return false;
-  }
-}
-
 bool testEraseSingle(const char** pname)
 {
   *pname = __func__;
@@ -606,6 +550,42 @@ bool testEraseRangeOutOfBound(const char** pname)
   }
 }
 
+bool testInsertIterSingle(const char** pname)
+{
+  *pname = __func__;
+  Vector< int > v;
+  v.pushBack(2);
+  v.pushBack(5);
+  v.pushBack(7);
+  auto it = v.insert(v.iter(1), 17);
+  return *it == 17 && it == v.iter(1) && v.getSize() == 4 && v[0] == 2 && v[2] == 5 && v[3] == 7;
+}
+
+bool testInsertIterRange(const char** pname)
+{
+  *pname = __func__;
+  Vector< int > v1;
+  v1.pushBack(1);
+  v1.pushBack(4);
+  v1.pushBack(5);
+  Vector< int > v2;
+  v2.pushBack(2);
+  v2.pushBack(3);
+  auto it = v1.insert(v1.iter(1), v2.cbegin(), v2.cend());
+  return *it == 2 && it == v1.iter(1) && v1.getSize() == 5 && v1[0] == 1 && v1[1] == 2 && v1[2] == 3 && v1[3] == 4 && v1[4] == 5;
+
+}
+
+bool testInsertIterValueRepeat(const char** pname)
+{
+  *pname = __func__;
+  Vector< int > v1;
+  v1.pushBack(1);
+  v1.pushBack(5);
+  auto it = v1.insert(v1.iter(1), 0, 3);
+  return *it == 0 && it == v1.iter(1) && v1.getSize() == 5 && v1[0] == 1 && v1[1] == 0 && v1[2] == 0 && v1[3] == 0 && v1[4] == 5;
+}
+
 int main()
 {
   using test_t = bool(*)(const char **);
@@ -629,8 +609,6 @@ int main()
     { testInsertRange, "Insert of range must copy elements from source range" },
     { testInsertRangeIdOutOfBound, "Insert of range must generate exception with specific text, if id out of bound" },
     { testInsertRangeOutOfBound, "Insert of range must generate exception with specific text, if range out of bound" },
-    { testInsertIterRange, "insert range using iterators must insert range at a position" },
-    { testInsertIterValueRepeat, "insert val repeat using iterators must insert k copies of val at a position" },
     { testEraseSingle, "Erase of single element must remove element at index and shift others" },
     { testEraseSingleOutOfBound, "Erase of single element must generate exception with specific text, if index >= size" },
     { testEraseRange, "Erase of range must remove elements on [beg; end)" },
@@ -646,7 +624,10 @@ int main()
     { testMoveConstructor, "Moved constructor must take ownership of data"},
     { testCopyAssignment, "Copy assignment must takes vectors equal"},
     { testMoveAssignment, "Move assignment must transfer ownership"},
-    { testSwap, "Swap must exchange contents of two vectors"}
+    { testSwap, "Swap must exchange contents of two vectors"},
+    { testInsertIterSingle, "Single insert with iterator must add element at a specific position and return an iterator to the inserted element" },
+    { testInsertIterRange, "Range insert with iterator must insert range at a position and return an iterator to the first inserted element " },
+    { testInsertIterValueRepeat, "Value-repeat insert with iterator must insert copies of val at a positon and return an iterator to the first inserted element" },
   };
 
   constexpr size_t count = sizeof(tests) / sizeof(case_t);
