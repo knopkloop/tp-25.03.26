@@ -104,12 +104,12 @@ bool testPopBackOnEmptyVector(const char** pname)
     v.popBack();
     return false;
   }
-  catch(const std::out_of_range& e)
+  catch (const std::out_of_range& e)
   {
     const char* text = e.what();
     return !std::strcmp(text, "Vector is empty");
   }
-  catch(...)
+  catch (...)
   {
     return false;
   }
@@ -134,7 +134,7 @@ bool testElementCheckedAccess(const char** pname)
     int& r = v.at(0);
     return r == 2;
   }
-  catch(...)
+  catch (...)
   {
     return false;
   }
@@ -149,12 +149,12 @@ bool testElementCheckedOutOfBoundAccess(const char** pname)
     v.at(0);
     return false;
   }
-  catch(const std::out_of_range& e)
+  catch (const std::out_of_range& e)
   {
     const char* text = e.what();
     return !std::strcmp(text, "id out of bound");
   }
-  catch(...)
+  catch (...)
   {
     return false;
   }
@@ -171,7 +171,7 @@ bool testElementCheckedConstAccess(const char** pname)
     const int& r = rv.at(0);
     return r == 2;
   }
-  catch(...)
+  catch (...)
   {
     return false;
   }
@@ -186,12 +186,12 @@ bool testElementCheckedOutOfBoundConstAccess(const char** pname)
     v.at(0);
     return false;
   }
-  catch(const std::out_of_range& e)
+  catch (const std::out_of_range& e)
   {
     const char* text = e.what();
     return !std::strcmp(text, "id out of bound");
   }
-  catch(...)
+  catch (...)
   {
     return false;
   }
@@ -240,7 +240,7 @@ bool testCopyConstructor(const char** pname)
 
   Vector< int > yav = v;
 
-  if(v.isEmpty() || yav.isEmpty())
+  if (v.isEmpty() || yav.isEmpty())
   {
     throw std::logic_error("Vectors is expected to be non-empty");
   }
@@ -253,7 +253,7 @@ bool testCopyConstructor(const char** pname)
     {
       isEqual = (v.at(i) == yav.at(i));
     }
-    catch(...)
+    catch (...)
     {
       return false;
     }
@@ -286,7 +286,7 @@ bool testMoveConstructor(const char** pname)
         return false;
       }
     }
-    catch(...)
+    catch (...)
     {
       return false;
     }
@@ -334,7 +334,7 @@ bool testMoveAssignment(const char** pname)
       return false;
     }
   }
-  catch(...)
+  catch (...)
   {
     return false;
   }
@@ -371,7 +371,7 @@ bool testInsertSingle(const char** pname)
     v.insert(1, 2);
     return v.getSize() == 3 && v[1] == 2;
   }
-  catch(...)
+  catch (...)
   {
     return false;
   }
@@ -387,12 +387,12 @@ bool testInsertSingleOutOfBound(const char** pname)
     v.insert(2, 99);
     return false;
   }
-  catch(const std::out_of_range& e)
+  catch (const std::out_of_range& e)
   {
     const char* text = e.what();
     return !std::strcmp(text, "id out of bound");
   }
-  catch(...)
+  catch (...)
   {
     return false;
   }
@@ -413,7 +413,7 @@ bool testInsertRange(const char** pname)
     v1.insert(1, v2, 0, 2);
     return v1.getSize() == 4 && v1[0] == 1 && v1[1] == 2 && v1[2] == 3 && v1[3] == 4;
   }
-  catch(...)
+  catch (...)
   {
     return false;
   }
@@ -431,12 +431,12 @@ bool testInsertRangeIdOutOfBound(const char** pname)
     v1.insert(2, v2, 0, 1);
     return false;
   }
-  catch(const std::out_of_range& e)
+  catch (const std::out_of_range& e)
   {
     const char* text = e.what();
     return !std::strcmp(text, "id out of bound");
   }
-  catch(...)
+  catch (...)
   {
     return false;
   }
@@ -457,12 +457,12 @@ bool testInsertRangeOutOfBound(const char** pname)
     v1.insert(2, v2, 1, v2.getSize() + 1);
     return false;
   }
-  catch(const std::out_of_range& e)
+  catch (const std::out_of_range& e)
   {
     const char* text = e.what();
     return !std::strcmp(text, "range out of bound");
   }
-  catch(...)
+  catch (...)
   {
     return false;
   }
@@ -480,7 +480,7 @@ bool testEraseSingle(const char** pname)
     v.erase(1);
     return v.getSize() == 2 && v[0] == 1 && v[1] == 3;
   }
-  catch(...)
+  catch (...)
   {
     return false;
   }
@@ -497,12 +497,12 @@ bool testEraseSingleOutOfBound(const char** pname)
     v.erase(2);
     return false;
   }
-  catch(const std::out_of_range& e)
+  catch (const std::out_of_range& e)
   {
     const char* text = e.what();
     return !std::strcmp(text, "id out of bound");
   }
-  catch(...)
+  catch (...)
   {
     return false;
   }
@@ -521,7 +521,7 @@ bool testEraseRange(const char** pname)
     v.erase(1, 3);
     return v.getSize() == 2 && v[0] == 1 && v[1] == 4;
   }
-  catch(...)
+  catch (...)
   {
     return false;
   }
@@ -539,12 +539,12 @@ bool testEraseRangeOutOfBound(const char** pname)
     v.erase(1, 5);
     return false;
   }
-  catch(const std::out_of_range& e)
+  catch (const std::out_of_range& e)
   {
     const char* text = e.what();
     return !std::strcmp(text, "range out of bound");
   }
-  catch(...)
+  catch (...)
   {
     return false;
   }
@@ -679,7 +679,7 @@ int main()
     {
       r = tests[i].first(&testName);
     }
-    catch(const std::logic_error& e)
+    catch (const std::logic_error& e)
     {
       std::cout << "[NOT RUN] " << testName << "\n";
       std::cout << "\t" << "Reason: " << e.what() << "\n";

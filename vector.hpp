@@ -229,7 +229,7 @@ void haliullin::Vector< T >::pushBack(const T& val)
 
       temp_data[size_++] = val;
     }
-    catch(...)
+    catch (...)
     {
       delete[] temp_data;
       throw;
